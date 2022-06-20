@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model posts {
+  postId      Int       @id @default(autoincrement()) @map("post_id")
+  userId      Int?      @map("user_id")
+  title       String    @db.VarChar(220)
+  description String?
+  photoUrl    String?   @map("photo_url") @db.VarChar(120)
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  user        user?     @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user {
+  userId          Int       @id @default(autoincrement()) @map("user_id")
+  username        String    @unique(map: "username_uniq") @db.VarChar(50)
+  password        String    @db.VarChar(50)
+  email           String    @db.VarChar(50)
+  firstName       String    @map("first_name") @db.VarChar(50)
+  lastName        String    @map("last_name") @db.VarChar(50)
+  createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  profilePhotoUrl String?   @map("profile_photo_url") @db.VarChar(120)
+  bio             String?   @db.VarChar(220)
+  posts           posts[]
+
+  @@map("users")
+}
