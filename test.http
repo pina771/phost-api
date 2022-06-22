@@ -7,6 +7,15 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/users/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBpbmE3NzEiLCJzdWIiOjQsImlhdCI6MTY1NTcyMzY0MSwiZXhwIjoxNjU1NzQ1MjQxfQ.dbHi2ipxjuccjCl3kzcpGnWEvGmheblvSRpY3NE1-QI
+
+GET http://localhost:3000/posts
+
+###
+PATCH http://localhost:3000/posts/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBpbmE3NzEiLCJzdWIiOjQsImlhdCI6MTY1NTkyMjAwMSwiZXhwIjoxNjU1OTQzNjAxfQ.ymkKCMk0oQ4hEgZOw0NZKc21_6kTQ2BUkM4QArmQGAQ
+Content-Type: application/json
+
+{
+  "description": "GOodbye, trust."
+}
 

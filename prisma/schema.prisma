@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model posts {
+model post {
   postId      Int       @id @default(autoincrement()) @map("post_id")
   userId      Int?      @map("user_id")
   title       String    @db.VarChar(220)
@@ -15,6 +15,8 @@ model posts {
   photoUrl    String?   @map("photo_url") @db.VarChar(120)
   createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   user        user?     @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("posts")
 }
 
 model user {
@@ -27,7 +29,7 @@ model user {
   createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   profilePhotoUrl String?   @map("profile_photo_url") @db.VarChar(120)
   bio             String?   @db.VarChar(220)
-  posts           posts[]
+  posts           post[]
 
   @@map("users")
 }
