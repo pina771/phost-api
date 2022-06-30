@@ -41,8 +41,13 @@ export class PostsController {
     @Request() req,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log(createPostDto);
-    return this.postsService.create(createPostDto, +req.user.userId, file.path);
+    console.log(file.filename);
+
+    return this.postsService.create(
+      createPostDto,
+      +req.user.userId,
+      file.filename,
+    );
   }
 
   @Get()
@@ -55,6 +60,7 @@ export class PostsController {
     return this.postsService.findOne(+id);
   }
 
+  @Patch(':id')
   @ApiResponse({
     status: 200,
     description:
@@ -63,7 +69,6 @@ export class PostsController {
   @ApiParam({ name: 'id', description: 'Defines the post which is updated' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,

@@ -13,7 +13,7 @@ export class PostsService {
   }
 
   async findAll() {
-    return await this.prismaService.post.findMany();
+    return await this.prismaService.post.findMany({ include: { user: true } });
   }
 
   async findOne(id: number) {

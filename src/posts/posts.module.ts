@@ -10,33 +10,11 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { randomUUID } from 'crypto';
 import { extname } from 'path';
+import { multerConfig } from 'src/configs/multer.config';
 
 @Module({
   controllers: [PostsController],
   providers: [PostsService],
-  imports: [
-    PrismaModule,
-    MulterModule.register({
-      storage: diskStorage({
-        destination: 'uploads',
-        filename(req, file, callback) {
-          callback(null, `${randomUUID()}${extname(file.originalname)}`);
-        },
-      }),
-
-      fileFilter(req, file, cb) {
-        if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-          // Allow storage of file
-          cb(null, true);
-        } else {
-          cb(
-            new BadRequestException('Allowed formats: JPG | JPEG | PNG'),
-            false,
-          );
-        }
-      },
-      limits: { files: 1, fileSize: 5 * 1000000 },
-    }),
-  ],
+  imports: [PrismaModule, MulterModule.register(multerConfig)],
 })
 export class PostsModule {}
