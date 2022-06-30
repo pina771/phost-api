@@ -6,6 +6,10 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { PostsModule } from './posts/posts.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { existsSync, mkdirSync } from 'fs';
+import { randomUUID } from 'crypto';
 
 @Module({
   imports: [
@@ -16,7 +20,6 @@ import { PostsModule } from './posts/posts.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-
     PostsModule,
   ],
   controllers: [AppController],

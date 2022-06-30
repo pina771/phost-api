@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePostDto {
-  @ApiProperty()
+  @ApiProperty({ maxLength: 220 })
   title: string;
   @ApiProperty()
   description?: string;
-  @ApiProperty()
-  photoUrl?: string; // TODO: Implementirat slike
+  @ApiProperty({ name: 'image', type: 'file', format: 'jpg,png,jpeg' })
+  image: any;
 }

@@ -6,6 +6,8 @@
 .env
 .http
 /src/auth/constants.ts
+/upload
+*.jpg
 
 # Logs
 logs

@@ -8,23 +8,41 @@ import {
   Delete,
   UseGuards,
   Request,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { post } from '@prisma/client';
-import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiProperty,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('posts')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() createPostDto: CreatePostDto, @Request() req) {
-    return this.postsService.create(createPostDto, +req.user.userId);
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
+  async create(
+    @Body() createPostDto: CreatePostDto,
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log(createPostDto);
+    return this.postsService.create(createPostDto, +req.user.userId, file.path);
   }
 
   @Get()
