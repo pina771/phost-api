@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { MulterModule } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import multer, { diskStorage } from 'multer';
 import { AppModule } from './app.module';

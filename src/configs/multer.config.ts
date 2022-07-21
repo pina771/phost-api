@@ -19,5 +19,5 @@ export const multerConfig = {
       cb(new BadRequestException('Allowed formats: JPG | JPEG | PNG'), false);
     }
   },
-  limits: { files: 1, fileSize: 5 * 1000000 },
+  limits: { files: 1, fileSize: 5 * 1000 * 1000 },
 };

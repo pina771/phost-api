@@ -14,6 +14,8 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,6 +29,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserDto } from './dto/user-dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -50,14 +53,7 @@ export class UsersController {
   })
   async create(
     @Body() createUserDto: CreateUserDto,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1000 }),
-          new FileTypeValidator({ fileType: 'jpeg' }),
-        ],
-      }),
-    )
+    @UploadedFile()
     file: Express.Multer.File,
   ) {
     if (file) {
@@ -67,15 +63,29 @@ export class UsersController {
   }
 
   @Get()
-  async findAll() {
+  @ApiResponse({
+    status: 200,
+    type: UserDto,
+    isArray: true,
+    description:
+      'Returns an array of UserDtos that contain general information about the users.',
+  })
+  async findAll(): Promise<UserDto[]> {
     return await this.usersService.findAll();
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    type: UserDto,
+    description:
+      'Returns the general info (UserDto) about the user specified in the parameter.',
+  })
   async findOne(@Param('id') id: string, @Request() req) {
     return await this.usersService.findOne(+id);
   }
 
+  // TODO: Image reupload
   @ApiBearerAuth()
   @ApiParam({
     name: 'id',
@@ -92,12 +102,17 @@ export class UsersController {
     return await this.usersService.update(+id, updateUserDto);
   }
 
-  @ApiBearerAuth('test')
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 
+  // TODO: Post Dto
+  @ApiResponse({
+    status: 200,
+    description: 'Returns all posts of the user defined by the parameter.',
+  })
   @Get(':id/posts')
   async getAllPostsFromUser(@Param('id') id: string) {
     return await this.usersService.findAllPostsFromUser(+id);

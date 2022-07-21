@@ -4,6 +4,7 @@ import { unlink } from 'fs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto } from './dto/user-dto';
 
 @Injectable()
 export class UsersService {
@@ -28,13 +29,32 @@ export class UsersService {
     }
   }
 
-  async findAll() {
-    return await this.prismaService.user.findMany();
+  async findAll(): Promise<UserDto[]> {
+    return await this.prismaService.user.findMany({
+      select: {
+        userId: true,
+        username: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        profilePhotoUrl: true,
+        bio: true,
+      },
+    });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<UserDto> {
     return await this.prismaService.user.findUnique({
       where: { userId: id },
+      select: {
+        userId: true,
+        username: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        profilePhotoUrl: true,
+        bio: true,
+      },
     });
   }
 
@@ -49,7 +69,23 @@ export class UsersService {
     return await this.prismaService.user.delete({ where: { userId: id } });
   }
 
-  async findOneByUsername(username: string): Promise<user> {
+  async findOneByUsername(username: string): Promise<UserDto> {
+    // TODO:
+    return await this.prismaService.user.findUnique({
+      where: { username: username },
+      select: {
+        userId: true,
+        username: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        profilePhotoUrl: true,
+        bio: true,
+      },
+    });
+  }
+
+  async findOneByUsernameForLogin(username: string): Promise<user> {
     return await this.prismaService.user.findUnique({
       where: { username: username },
     });
