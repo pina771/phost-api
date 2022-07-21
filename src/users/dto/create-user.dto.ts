@@ -15,4 +15,14 @@ export class CreateUserDto {
 
   @ApiProperty()
   lastName: string;
+
+  @ApiProperty({
+    name: 'image',
+    type: 'file',
+    format: 'jpg,png,jpeg',
+    required: false,
+    description:
+      'Profile photo image in specified format. If not provided, a generic avatar photo will be used.',
+  })
+  image?: any;
 }
